@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body { font-family: Vazirmatn, Tahoma, sans-serif; background: #f8fafc; }
+.card { background: white; border-radius: 1rem; padding: 1rem; border: 1px solid #e2e8f0; }
+.btn { background: #0f766e; color: white; border-radius: 0.75rem; padding: 0.6rem 1.2rem; }
+.btn:disabled { opacity: 0.6; }
+input, textarea, select { border: 1px solid #cbd5e1; border-radius: 0.75rem; padding: 0.6rem; width: 100%; }
+.tab { padding: 0.5rem 0.9rem; border-radius: 999px; background: #e2e8f0; font-size: 13px; }
+.tab.active { background: #0f766e; color: white; }
