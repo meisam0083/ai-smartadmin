@@ -14,3 +14,17 @@
 @media(max-width:360px){.install-banner{grid-template-columns:1fr}.install-symbol{display:none}.install-actions{grid-column:1}}
 
 .connection-form{margin-top:18px}.connection-form>p,.connection-list>p{color:var(--sub);font-size:12px;line-height:1.8}.connection-form form{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}.connection-form label{display:grid;gap:7px;font-size:12px;font-weight:600}.connection-form input{width:100%;min-width:0;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:11px;font:inherit;font-size:12px}.connection-form form>button{grid-column:1/-1;justify-self:start;background:#205777;color:#fff;border:0;border-radius:10px;padding:10px 20px}.connection-form button:disabled{opacity:.55;cursor:wait}.connection-list{margin-top:24px}.connection-entry{display:flex;align-items:center;gap:10px;border-top:1px solid var(--line);padding:12px 0}.connection-entry>div{flex:1;min-width:0}.connection-entry b,.connection-entry small{display:block;overflow-wrap:anywhere}.connection-entry small{color:var(--sub);font-size:11px}.connection-entry button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:8px;font-size:11px}@media(max-width:750px){.connection-form form{grid-template-columns:1fr}.connection-entry{flex-wrap:wrap}}
+
+/* Sidebar follows the selected application theme, including mobile drawer. */
+.layout:not(.dark) aside{background:#fff;color:#344e63;border-left:1px solid #e5edf3;box-shadow:-5px 0 24px #14364b08}
+.layout:not(.dark) aside .brand{color:#18374e}
+.layout:not(.dark) aside .brand small{color:#6e8ca1}
+.layout:not(.dark) aside .navlabel{color:#8097a9}
+.layout:not(.dark) aside nav button{color:#425e72}
+.layout:not(.dark) aside nav button:hover{background:#eef5fb;color:#173f5a}
+.layout:not(.dark) aside nav button.active{background:#e4f0fa;color:#174b70;box-shadow:inset -3px 0 #e89c50;font-weight:700}
+.layout:not(.dark) aside .sidebottom{border-top-color:#e5edf3;color:#758fa2}
+.layout:not(.dark) aside .close{color:#27485f}
+.layout.dark aside{background:#102b40;color:#b6c7d4}
+.layout.dark aside .brand{color:#fff}
+.layout.dark aside nav button.active{background:#23475e;color:#fff}
