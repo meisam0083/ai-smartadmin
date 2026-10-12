@@ -1,0 +1,2 @@
+import {db} from './db';import {hashToken} from './security';import {tokenFromCookie} from './http';
+export async function requireUser(cookieHeader:string|undefined){const token=tokenFromCookie(cookieHeader);if(!token)return null;const sql=db();const rows=await sql`SELECT user_id FROM sessions WHERE token_hash=${hashToken(token)} AND expires_at>now() LIMIT 1`;return rows[0]?.user_id as string|undefined ?? null}
