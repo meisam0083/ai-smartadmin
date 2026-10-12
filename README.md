@@ -1,26 +1,47 @@
-# AI SmartAdmin — مدیر هوشمند شبکه‌های اجتماعی
+# مدیر هوشمند شبکه‌های اجتماعی | AI SmartAdmin
 
-Work in progress. This repository is **not yet production-ready**. No live publishing, database migration, Netlify deployment, or Android PWA installation has been verified.
+سامانه فارسی و راست‌چین مدیریت، تولید، زمان‌بندی و انتشار خودکار محتوا.
 
-## Current implementation
-- Responsive Persian RTL dashboard with light/dark themes and honest empty states.
-- Shared Jalali/Persian display formatting in `src/lib/locale.ts`.
-- PWA manifest, install banner, SVG icon and network-first service worker. PNG 192/512 icons and device tests are pending.
-- PostgreSQL schema in `db/schema.sql` for users, sessions, connections, RSS, content, publishing jobs and audit events.
-- Netlify serverless health endpoint and first-user registration/login/logout/me endpoints. Secrets remain server-side.
+**آدرس هدف:** https://ai-smartadmin.netlify.app  
+**وضعیت فعلی:** در حال توسعه؛ هنوز نسخه آماده بهره‌برداری نیست. استقرار نهایی، اتصال پایگاه داده، انتشار واقعی و نصب روی اندروید تأیید نشده‌اند.
 
-## Setup
-1. Configure a persistent PostgreSQL database and execute `db/schema.sql`.
-2. Configure Netlify environment variables from `.env.example`. Generate `TOKEN_ENCRYPTION_KEY` using 32 cryptographically secure random bytes encoded as Base64. Never use a `VITE_` prefix for secrets.
-3. `npm install && npm run build`.
-4. Deploy with Netlify. The configured domain is a target, not a verified deployment.
+## امکانات پیاده‌سازی‌شده تا این مرحله
 
-## API
-- `GET /api/health` — database connectivity (no secrets returned)
-- `POST /api/auth?action=register` — initial account only; registration closes after first user
-- `POST /api/auth?action=login` — HTTP-only secure cookie
-- `POST /api/auth?action=logout`
-- `GET /api/auth?action=me`
+- قالب واکنش‌گرای داشبورد با تم روشن و تاریک و نمایش صادقانه وضعیت‌های بدون داده.
+- ماژول مشترک نمایش اعداد فارسی و تاریخ شمسی در `src/lib/locale.ts`؛ اعمال آن در همه صفحات همچنان باید تکمیل و بررسی شود.
+- بنر نصب وب‌اپ، فایل Manifest، آیکون اولیه SVG و Service Worker؛ آیکون‌های PNG استاندارد ۱۹۲ و ۵۱۲ و آزمون نصب واقعی باقی مانده‌اند.
+- طرح پایگاه داده PostgreSQL در `db/schema.sql` شامل کاربران، نشست‌ها، اتصال‌ها، منابع RSS، محتوا، صف انتشار و رویدادهای ثبت‌شده.
+- زیرساخت اولیه توابع سمت سرور Netlify برای بررسی وضعیت پایگاه داده و ثبت‌نام کاربر نخست، ورود، خروج و بررسی نشست.
+- توابع اولیه هش‌کردن رمز عبور، نشست مبتنی بر کوکی امن و رمزنگاری اطلاعات حساس در سمت سرور.
 
-## Before production
-Implement rate limiting, CSRF/origin checks for state-changing endpoints, atomic first-user bootstrap, migrations and integration tests, connection CRUD, Gemini, RSS, scheduler, queue and real UI authentication. The endpoints are a foundation and must not be considered a finished secure deployment. Do not publish test posts to public channels without explicit permission.
+## راه‌اندازی توسعه
+
+ابتدا یک پایگاه داده PostgreSQL پایدار تهیه و دستورات `db/schema.sql` را در آن اجرا کنید. سپس متغیرهای موردنیاز را مطابق فایل `.env.example` در تنظیمات محیطی Netlify قرار دهید. مقدار `TOKEN_ENCRYPTION_KEY` باید از ۳۲ بایت تصادفی امن با کدگذاری Base64 ساخته شود.
+
+```bash
+npm install
+npm run build
+npm run dev
+```
+
+**توجه:** قرارگرفتن دستورهای بالا در این راهنما به معنی تأیید اجرای موفق آن‌ها نیست. کلیدها و توکن‌های واقعی را در GitHub، کد فرانت‌اند یا متغیرهایی با پیشوند `VITE_` ثبت نکنید.
+
+## مسیرهای فعلی API
+
+| روش | مسیر | کاربرد |
+|---|---|---|
+| GET | `/api/health` | بررسی اتصال پایگاه داده |
+| POST | `/api/auth?action=register` | ثبت‌نام اولیه کاربر |
+| POST | `/api/auth?action=login` | ورود و ایجاد نشست امن |
+| POST | `/api/auth?action=logout` | خروج |
+| GET | `/api/auth?action=me` | دریافت اطلاعات کاربر واردشده |
+
+## موارد باقی‌مانده پیش از انتشار عمومی
+
+تکمیل محدودسازی درخواست‌ها، محافظت CSRF و بررسی مبدأ درخواست، ثبت‌نام اولیه اتمیک، مهاجرت پایگاه داده، آزمون‌های یکپارچه، رابط ورود واقعی، مدیریت اتصال‌های اجتماعی، سرویس مرکزی Gemini، پردازش RSS و تصاویر، صف و زمان‌بند مقاوم در برابر انتشار تکراری، گزارش‌های واقعی و آزمون کامل PWA.
+
+**هیچ پست آزمایشی بدون تأیید صریح مالک در کانال عمومی منتشر نشود.** امکانات ناقص نباید با پیام موفقیت یا آمار نمایشی، آماده معرفی شوند.
+
+## اصول محصول
+
+رابط کاربری فارسی و RTL است. اعداد و تاریخ‌های نمایشی باید فارسی و شمسی باشند؛ داده‌های فنی مانند URL، API Key، توکن، شناسه و زمان استاندارد ذخیره‌شده بدون تبدیل باقی می‌مانند. زمان‌بندی انتشار باید سمت سرور و مستقل از بازبودن مرورگر باشد.
