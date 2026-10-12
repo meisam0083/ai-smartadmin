@@ -30,3 +30,17 @@
 .layout.dark aside nav button.active{background:#23475e;color:#fff}
 
 .page-panel{margin-top:18px;min-height:260px}.page-empty{border:1px dashed var(--line);border-radius:12px;background:var(--bg);padding:45px 20px;text-align:center;color:var(--sub);font-size:12px;line-height:2}.page-fields{display:grid;gap:15px;max-width:650px}.page-fields label{display:grid;gap:7px;font-size:12px;font-weight:600}.page-fields input,.page-fields textarea,.page-fields select{font:inherit;font-size:12px;width:100%;min-width:0;padding:11px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}.page-fields button,.account-status button{border:0;background:#205777;color:white;padding:11px 17px;border-radius:10px;justify-self:start}.page-fields button:disabled{opacity:.5;cursor:not-allowed}.page-note{font-size:12px;color:var(--sub);line-height:2}.mode-tabs{display:flex;gap:8px}.mode-tabs button{background:var(--bg);color:var(--ink);border:1px solid var(--line)}.mode-tabs button[aria-pressed=true]{background:#205777;color:white}.account-status{display:flex;gap:15px;align-items:center;flex-wrap:wrap;font-size:12px}
+
+/* Layout correction: margin:auto on a flex child vertically centered short pages. */
+.layout{align-items:stretch}
+.layout main{margin:0 auto;align-self:stretch;width:100%;min-height:100vh;flex:1 1 0;padding-top:22px}
+.layout main>header{margin-top:0}
+.layout .page-panel{margin-top:0;min-height:0;position:relative;overflow:hidden;border-color:var(--line);box-shadow:0 8px 30px #133e5b0b}
+.layout .page-panel:before{content:"";display:block;position:absolute;right:0;top:0;bottom:0;width:4px;background:linear-gradient(#ec9b50,#3d8bb1)}
+.layout .page-panel .sectionhead{padding-bottom:15px;border-bottom:1px solid var(--line);margin-bottom:19px}
+.layout .page-panel .sectionhead h3{font-size:17px;color:var(--ink)}
+.layout .page-panel .sectionhead p{font-size:12px;line-height:1.8;margin-top:5px}
+.layout .page-empty{min-height:140px;padding:30px 18px;background:linear-gradient(125deg,#f0f7fc,#fff8f0);border-color:#dbe8f0;color:#526d7f;display:flex;align-items:center;justify-content:center}
+.layout.dark .page-empty{background:linear-gradient(125deg,#183c51,#342f35);border-color:#34566a;color:#c2d3df}
+.layout .page-panel input:focus-visible,.layout .page-panel textarea:focus-visible,.layout .page-panel select:focus-visible{outline:2px solid #4392b7;outline-offset:2px}
+@media(max-width:750px){.layout main{margin:0;min-height:100dvh;padding:14px 15px 32px}.layout main>header{margin:0 0 17px}.layout .page-panel{margin-top:0}.layout .page-panel .sectionhead h3{font-size:16px}.layout .page-empty{min-height:120px;padding:24px 14px}}
