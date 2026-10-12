@@ -1,0 +1,8 @@
+import {randomBytes,createHash,scryptSync,timingSafeEqual,createCipheriv,createDecipheriv} from 'node:crypto';
+export const hashToken=(token:string)=>createHash('sha256').update(token).digest('hex');
+export function passwordHash(password:string){if(password.length<12||password.length>1024)throw new Error('PASSWORD_LENGTH');const salt=randomBytes(16).toString('hex');return salt+':'+scryptSync(password,salt,64).toString('hex')}
+export function passwordVerify(password:string,stored:string){const [salt,hex]=stored.split(':');if(!salt||!hex||hex.length!==128)return false;const expected=Buffer.from(hex,'hex');return timingSafeEqual(expected,scryptSync(password,salt,64))}
+function encryptionKey(){const raw=process.env.TOKEN_ENCRYPTION_KEY;if(!raw)throw new Error('ENCRYPTION_KEY_NOT_CONFIGURED');const key=Buffer.from(raw,'base64');if(key.length!==32)throw new Error('ENCRYPTION_KEY_MUST_BE_32_BYTES_BASE64');return key}
+export function encryptSecret(secret:string){const iv=randomBytes(12);const cipher=createCipheriv('aes-256-gcm',encryptionKey(),iv);const data=Buffer.concat([cipher.update(secret,'utf8'),cipher.final()]);return ['v1',iv.toString('base64'),cipher.getAuthTag().toString('base64'),data.toString('base64')].join('.')}
+export function decryptSecret(encoded:string){const [version,iv,tag,data]=encoded.split('.');if(version!=='v1'||!iv||!tag||!data)throw new Error('INVALID_CIPHERTEXT');const decipher=createDecipheriv('aes-256-gcm',encryptionKey(),Buffer.from(iv,'base64'));decipher.setAuthTag(Buffer.from(tag,'base64'));return Buffer.concat([decipher.update(Buffer.from(data,'base64')),decipher.final()]).toString('utf8')}
+export const newSessionToken=()=>randomBytes(32).toString('base64url');
