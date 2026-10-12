@@ -44,3 +44,12 @@
 .layout.dark .page-empty{background:linear-gradient(125deg,#183c51,#342f35);border-color:#34566a;color:#c2d3df}
 .layout .page-panel input:focus-visible,.layout .page-panel textarea:focus-visible,.layout .page-panel select:focus-visible{outline:2px solid #4392b7;outline-offset:2px}
 @media(max-width:750px){.layout main{margin:0;min-height:100dvh;padding:14px 15px 32px}.layout main>header{margin:0 0 17px}.layout .page-panel{margin-top:0}.layout .page-panel .sectionhead h3{font-size:16px}.layout .page-empty{min-height:120px;padding:24px 14px}}
+
+/* Prevent empty-page pull/bounce without disabling scrolling on long pages. */
+html{min-height:100%;overscroll-behavior-y:none}
+body{min-height:100%;overscroll-behavior-y:none}
+#root{min-height:100dvh;overscroll-behavior-y:none}
+.layout{min-height:100dvh;overscroll-behavior-y:none}
+.layout main{min-height:100dvh;overscroll-behavior-y:contain}
+.layout aside{overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch}
+@media(max-width:750px){html,body{overflow-x:hidden}.layout main{min-height:100dvh}}
