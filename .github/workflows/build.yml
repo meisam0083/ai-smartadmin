@@ -21,3 +21,5 @@ jobs:
         run: npm install
       - name: TypeScript and production build
         run: npm run build
+      - name: Bundle Netlify functions
+        run: npx esbuild netlify/functions/*.ts --bundle --platform=node --target=node20 --outdir=/tmp/netlify-functions
