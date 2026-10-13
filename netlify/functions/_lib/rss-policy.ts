@@ -17,6 +17,13 @@ export function selectFeedCandidates(candidates:FeedCandidate[],alreadySeen:Set<
  if(policy.publicationMode==='manual')return {publish:[] as FeedCandidate[],review:unique};
  if(policy.publicationMode==='all')return {publish:unique,review:[] as FeedCandidate[]};
  if(policy.publicationMode!=='limited'||!Number.isSafeInteger(policy.limit)||policy.limit<1)throw new Error('INVALID_LIMIT');
+ if(!Number.isSafeInteger(publishedInWindow)||publishedInWindow<0)throw new Error('INVALID_USAGE');
  const available=Math.max(0,policy.limit-publishedInWindow);
  return {publish:unique.slice(0,available),review:unique.slice(available)};
+}
+
+// A feed's publishing quota is measured in a rolling window, not reset on each poll.
+export function withinPublicationWindow(publishedAt:string|Date,now:Date,policy:FeedPolicy){
+ const time=new Date(publishedAt).getTime();
+ return Number.isFinite(time)&&time<=now.getTime()&&time>now.getTime()-windowMilliseconds(policy);
 }
