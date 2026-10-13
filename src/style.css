@@ -118,3 +118,16 @@ body{height:auto!important;min-height:100dvh!important}
   .layout main{display:block!important;width:100%!important;height:auto!important;min-height:100dvh!important;max-height:none!important;overflow:visible!important;overflow-y:visible!important;position:relative}
   .layout main>*{flex-shrink:initial!important}
 }
+
+
+/* Mobile scroll: use a single document scroller and avoid fixed viewport-height locks. */
+@media(max-width:750px){
+  html,body{overflow:visible!important;overscroll-behavior:auto!important}
+  body{position:static!important;display:block!important}
+  #root{position:static!important;display:block!important;overflow:visible!important}
+  .layout{position:static!important;display:block!important;overflow:visible!important;transform:none!important}
+  .layout main{position:static!important;display:block!important;overflow:visible!important;overflow-y:visible!important;max-height:none!important;height:auto!important;min-height:0!important;transform:none!important;contain:none!important}
+  .layout main>*{overflow:visible}
+  .layout .page-panel,.connection-form,.connection-list{overflow:visible!important;max-height:none!important}
+  .layout aside{position:fixed!important;overflow-y:auto!important;overscroll-behavior:contain!important}
+}
