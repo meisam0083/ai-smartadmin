@@ -106,3 +106,15 @@ body{height:auto!important;min-height:100dvh!important}
 #root,.layout,.layout main{height:auto!important;min-height:100dvh!important;max-height:none!important;overflow:visible!important}
 .layout main{width:100%;align-self:stretch}
 .layout .page-panel{overflow:visible!important}
+
+
+/* Structural mobile scroll fix: switch the app shell out of flex layout on phones.
+   The sidebar is fixed-position on mobile, so the main content can use normal document flow. */
+@media(max-width:750px){
+  html,body{display:block!important;width:100%;min-height:100%!important;height:auto!important;overflow-x:hidden!important;overflow-y:auto!important}
+  body{position:static!important}
+  #root{display:block!important;width:100%;min-height:100dvh!important;height:auto!important;overflow:visible!important}
+  .layout{display:block!important;width:100%;min-height:100dvh!important;height:auto!important;max-height:none!important;overflow:visible!important}
+  .layout main{display:block!important;width:100%!important;height:auto!important;min-height:100dvh!important;max-height:none!important;overflow:visible!important;overflow-y:visible!important;position:relative}
+  .layout main>*{flex-shrink:initial!important}
+}
