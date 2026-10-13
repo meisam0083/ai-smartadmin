@@ -19,6 +19,9 @@ async function ensure(sql:ReturnType<typeof db>){
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now()
  )`;
+ await sql`ALTER TABLE content_queue ADD COLUMN IF NOT EXISTS published_at timestamptz`;
+ await sql`ALTER TABLE content_queue ADD COLUMN IF NOT EXISTS telegram_message_id text`;
+ await sql`ALTER TABLE content_queue ADD COLUMN IF NOT EXISTS last_error text`;
  await sql`CREATE INDEX IF NOT EXISTS content_queue_user_created_idx ON content_queue(user_id,created_at DESC)`;
 }
 export const handler:Handler=async event=>{
@@ -26,7 +29,7 @@ export const handler:Handler=async event=>{
   const user=await requireUser(event.headers.cookie);if(!user)return json(401,{error:'UNAUTHENTICATED'});
   const sql=db();await ensure(sql);
   if(event.httpMethod==='GET'){
-   const rows=await sql`SELECT q.id,q.title,q.content,q.status,q.scheduled_at AS "scheduledAt",q.created_at AS "createdAt",q.connection_id AS "connectionId",c.name AS "connectionName" FROM content_queue q LEFT JOIN social_connections c ON c.id=q.connection_id AND c.user_id=q.user_id WHERE q.user_id=${user} ORDER BY q.created_at DESC LIMIT 100`;
+   const rows=await sql`SELECT q.id,q.title,q.content,q.status,q.scheduled_at AS "scheduledAt",q.created_at AS "createdAt",q.published_at AS "publishedAt",q.telegram_message_id AS "telegramMessageId",q.last_error AS "lastError",q.connection_id AS "connectionId",c.name AS "connectionName" FROM content_queue q LEFT JOIN social_connections c ON c.id=q.connection_id AND c.user_id=q.user_id WHERE q.user_id=${user} ORDER BY q.created_at DESC LIMIT 100`;
    return json(200,{items:rows});
   }
   if(!trustedMutation(event))return json(403,{error:'ORIGIN_NOT_ALLOWED'});
