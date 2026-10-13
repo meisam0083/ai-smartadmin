@@ -75,3 +75,13 @@ body{min-height:100dvh;}
 .rss-entry a{overflow-wrap:anywhere;font-size:12px;color:#3286a6;}
 .rss-entry p{margin:0;font-size:12px;color:var(--sub);}
 @media(max-width:520px){.rss-two{grid-template-columns:1fr}.layout header{margin-bottom:28px}.layout .breadcrumb{margin-bottom:9px}.layout h1{margin-top:8px}}
+
+/* Final scroll fix: the document, not a nested flex child, owns vertical scrolling. */
+html{height:auto!important;min-height:100%!important;overflow-x:hidden!important;overflow-y:auto!important;}
+body{height:auto!important;min-height:100dvh!important;overflow-x:hidden!important;overflow-y:auto!important;position:relative;}
+#root{height:auto!important;min-height:100dvh!important;overflow:visible!important;}
+.layout{height:auto!important;min-height:100dvh!important;overflow:visible!important;align-items:stretch!important;}
+.layout main{height:auto!important;min-height:100dvh!important;max-height:none!important;overflow:visible!important;overflow-y:visible!important;}
+.layout main>*{flex-shrink:0;}
+.layout .page-panel{overflow:visible!important;}
+@media(max-width:750px){html,body,#root{height:auto!important;overflow-y:auto!important;touch-action:pan-y!important}.layout{height:auto!important;overflow:visible!important}.layout main{height:auto!important;min-height:100dvh!important;overflow:visible!important;padding-bottom:calc(40px + env(safe-area-inset-bottom))!important}}
