@@ -23,7 +23,7 @@ const decode=(s:string)=>s.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g,'$1').replace(/
 const tag=(block:string,names:string[])=>{for(const name of names){const re=new RegExp('<'+name+'(?:\\s[^>]*)?>([\\s\\S]*?)<\\/'+name+'\\s*>','i');const m=block.match(re);if(m)return decode(m[1]);}return '';};
 const attr=(s:string,name:string)=>{const m=s.match(new RegExp('(?:^|\\s)'+name+'\\s*=\\s*["\\']([^"\\']+)["\\']','i'));return m?decode(m[1]):''};
 function imageFrom(block:string,base:string){
- const rawHtml=(names:string[])=>{for(const name of names){const re=new RegExp('<'+name+'(?:\\s[^>]*)?>([\\s\\S]*?)<\\/'+name+'\\s*>','i');const m=block.match(re);if(m)return m[1].replace(/<!\\[CDATA\\[([\\s\\S]*?)\\]\\]>/g,'$1');}return '';};
+ const rawHtml=(names:string[])=>{for(const name of names){const re=new RegExp('<'+name+'(?:\\s[^>]*)?>([\\s\\S]*?)<\\/'+name+'\\s*>','i');const m=block.match(re);if(m)return m[1].replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g,'$1');}return '';};
  const tags=block.match(/<(?:media:content|media:thumbnail|enclosure|content:encoded|description|summary|content)(?:\s[^>]*)?>[\s\S]*?(?:<\/[^>]+>)?|<(?:media:content|media:thumbnail|enclosure)\b[^>]*\/?>/gi)||[];
  for(const t of tags){const u=attr(t,'url')||attr(t,'href');const type=attr(t,'type');if(u&&(t.startsWith('<media:')||type.startsWith('image/')||/\.(jpe?g|png|webp|gif|avif)(?:\?|$)/i.test(u))){try{const x=new URL(u,base);if(['http:','https:'].includes(x.protocol))return x.href}catch{}}}
  const html=rawHtml(['content:encoded','description','summary','content']);
