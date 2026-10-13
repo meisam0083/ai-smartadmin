@@ -21,7 +21,7 @@ async function safeTarget(raw:string){
 }
 const decode=(s:string)=>s.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g,'$1').replace(/&amp;/gi,'&').replace(/&lt;/gi,'<').replace(/&gt;/gi,'>').replace(/&quot;/gi,'"').replace(/&#39;|&apos;/gi,"'").replace(/&#(\d+);/g,(_,n)=>String.fromCodePoint(Math.min(0x10ffff,Number(n)||0))).replace(/&#x([\da-f]+);/gi,(_,n)=>String.fromCodePoint(Math.min(0x10ffff,parseInt(n,16)||0))).replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();
 const tag=(block:string,names:string[])=>{for(const name of names){const re=new RegExp('<'+name+'(?:\\s[^>]*)?>([\\s\\S]*?)<\\/'+name+'\\s*>','i');const m=block.match(re);if(m)return decode(m[1]);}return '';};
-const attr=(s:string,name:string)=>{const m=s.match(new RegExp('(?:^|\\s)'+name+'\\s*=\\s*["\\']([^"\\']+)["\\']','i'));return m?decode(m[1]):''};
+const attr=(s:string,name:string)=>{const m=s.match(new RegExp("(?:^|\\\\s)"+name+"\\\\s*=\\\\s*[\"']([^\"']+)[\"']","i"));return m?decode(m[1]):''};
 function imageFrom(block:string,base:string){
  const rawHtml=(names:string[])=>{for(const name of names){const re=new RegExp('<'+name+'(?:\\s[^>]*)?>([\\s\\S]*?)<\\/'+name+'\\s*>','i');const m=block.match(re);if(m)return m[1].replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g,'$1');}return '';};
  const tags=block.match(/<(?:media:content|media:thumbnail|enclosure|content:encoded|description|summary|content)(?:\s[^>]*)?>[\s\S]*?(?:<\/[^>]+>)?|<(?:media:content|media:thumbnail|enclosure)\b[^>]*\/?>/gi)||[];
