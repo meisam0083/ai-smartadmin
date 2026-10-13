@@ -6,11 +6,11 @@ import {decryptSecret} from './_lib/security';
 // One item per invocation; never automatically retry an ambiguous Telegram outcome.
 export default async function(){
  const sql=db();
+ // The scheduler must tolerate a fresh database before any queue request has initialized it.
+ await sql`CREATE TABLE IF NOT EXISTS content_queue (id uuid PRIMARY KEY DEFAULT gen_random_uuid(),user_id uuid NOT NULL REFERENCES app_users(id) ON DELETE CASCADE,connection_id uuid,title varchar(300) NOT NULL DEFAULT '',content text NOT NULL,status varchar(20) NOT NULL DEFAULT 'draft',scheduled_at timestamptz,source_url text,created_at timestamptz NOT NULL DEFAULT now(),updated_at timestamptz NOT NULL DEFAULT now())`;
  await sql`ALTER TABLE content_queue ADD COLUMN IF NOT EXISTS published_at timestamptz`;
  await sql`ALTER TABLE content_queue ADD COLUMN IF NOT EXISTS telegram_message_id text`;
  await sql`ALTER TABLE content_queue ADD COLUMN IF NOT EXISTS last_error text`;
- // The scheduler must tolerate a fresh database before any queue request has initialized it.
- await sql`CREATE TABLE IF NOT EXISTS content_queue (id uuid PRIMARY KEY DEFAULT gen_random_uuid(),user_id uuid NOT NULL REFERENCES app_users(id) ON DELETE CASCADE,connection_id uuid,title varchar(300) NOT NULL DEFAULT '',content text NOT NULL,status varchar(20) NOT NULL DEFAULT 'draft',scheduled_at timestamptz,source_url text,created_at timestamptz NOT NULL DEFAULT now(),updated_at timestamptz NOT NULL DEFAULT now())`;
  const claimed=await sql`UPDATE content_queue SET status='sending',updated_at=now(),last_error=NULL
  WHERE id=(SELECT id FROM content_queue WHERE status='scheduled' AND scheduled_at<=now()
  AND connection_id IS NOT NULL ORDER BY scheduled_at ASC,id ASC LIMIT 1 FOR UPDATE SKIP LOCKED)
