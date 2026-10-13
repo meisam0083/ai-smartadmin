@@ -93,7 +93,9 @@ body{height:auto!important;min-height:100dvh!important;overflow-x:hidden!importa
 
 /* Personal app polish: thin continuous gradient border and reliable mobile scroll. */
 .layout .page-panel{
-  border:1px solid transparent!important;
+  border-style:solid!important;
+  border-color:transparent!important;
+  border-width:1px 6px 1px 1px!important;
   background:
     linear-gradient(var(--panel),var(--panel)) padding-box,
     linear-gradient(145deg,#e9a052 0%,#8c9c9f 48%,#438eaf 100%) border-box!important;
