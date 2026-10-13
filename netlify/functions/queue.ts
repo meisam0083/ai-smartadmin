@@ -9,7 +9,7 @@ const validId=(v:string)=>/^[0-9a-f-]{36}$/i.test(v);
 async function ensure(sql:ReturnType<typeof db>){
  await sql`CREATE TABLE IF NOT EXISTS content_queue (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id text NOT NULL,
+  user_id uuid NOT NULL REFERENCES app_users(id) ON DELETE CASCADE,
   connection_id uuid,
   title varchar(300) NOT NULL DEFAULT '',
   content text NOT NULL,
