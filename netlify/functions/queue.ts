@@ -41,8 +41,9 @@ export const handler:Handler=async event=>{
    const scheduledAt=typeof b.scheduledAt==='string'&&b.scheduledAt?new Date(b.scheduledAt):null;
    if(!content||content.length>20000||title.length>300)return json(400,{error:'INVALID_INPUT'});
    if(connectionId&&!validId(connectionId))return json(400,{error:'INVALID_CONNECTION'});
-   if(scheduledAt&&Number.isNaN(scheduledAt.getTime()))return json(400,{error:'INVALID_SCHEDULE'});
-   if(connectionId){const c=await sql`SELECT id FROM social_connections WHERE id=${connectionId} AND user_id=${user} AND enabled=true`;if(!c.length)return json(400,{error:'INVALID_CONNECTION'});}
+   if(scheduledAt&&(Number.isNaN(scheduledAt.getTime())||scheduledAt.getTime()<=Date.now()))return json(400,{error:'INVALID_SCHEDULE'});
+   if(scheduledAt&&!connectionId)return json(400,{error:'SCHEDULE_NEEDS_CONNECTION'});
+   if(connectionId){const c=await sql`SELECT id FROM social_connections WHERE id=${connectionId} AND user_id=${user} AND enabled=true AND platform='telegram'`;if(!c.length)return json(400,{error:'INVALID_CONNECTION'});}
    const status=scheduledAt?'scheduled':'draft';
    const rows=await sql`INSERT INTO content_queue(user_id,connection_id,title,content,status,scheduled_at) VALUES(${user},${connectionId},${title},${content},${status},${scheduledAt?.toISOString()??null}) RETURNING id,title,content,status,scheduled_at AS "scheduledAt",created_at AS "createdAt",connection_id AS "connectionId"`;
    return json(201,{item:rows[0]});
@@ -50,13 +51,13 @@ export const handler:Handler=async event=>{
   if(event.httpMethod==='PATCH'){
    const b=parseBody(event.body) as Input;const id=String(b.id??''),status=String(b.status??'');
    if(!validId(id)||!['draft','ready'].includes(status))return json(400,{error:'INVALID_INPUT'});
-   const rows=await sql`UPDATE content_queue SET status=${status},updated_at=now() WHERE id=${id} AND user_id=${user} RETURNING id,status`;
+   const rows=await sql`UPDATE content_queue SET status=${status},updated_at=now() WHERE id=${id} AND user_id=${user} AND status IN ('draft','ready') AND (${status}='draft' OR EXISTS (SELECT 1 FROM social_connections c WHERE c.id=content_queue.connection_id AND c.user_id=content_queue.user_id AND c.enabled=true AND c.platform='telegram')) RETURNING id,status`;
    return rows.length?json(200,{item:rows[0]}):json(404,{error:'NOT_FOUND'});
   }
   if(event.httpMethod==='DELETE'){
    const id=event.queryStringParameters?.id;
    if(!id||!validId(id))return json(400,{error:'INVALID_ID'});
-   const rows=await sql`DELETE FROM content_queue WHERE id=${id} AND user_id=${user} RETURNING id`;
+   const rows=await sql`DELETE FROM content_queue WHERE id=${id} AND user_id=${user} AND status IN ('draft','ready','scheduled','failed') RETURNING id`;
    return rows.length?json(200,{deleted:true}):json(404,{error:'NOT_FOUND'});
   }
   return json(405,{error:'METHOD_NOT_ALLOWED'});
