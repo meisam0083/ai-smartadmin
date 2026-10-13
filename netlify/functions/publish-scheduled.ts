@@ -23,11 +23,9 @@ export const handler:Handler=async()=>{
     const result=await response.json() as {ok?:boolean;description?:string;result?:{message_id?:number}};
     if(!response.ok||!result.ok)throw new Error('TELEGRAM_SEND_FAILED');
     await sql`UPDATE content_queue SET status='published',updated_at=now() WHERE id=${item.id}`;
-    await sql`INSERT INTO audit_events(user_id,action,subject_id,detail) VALUES(${item.user_id},'scheduled_telegram_published',${item.id},${JSON.stringify({messageId:result.result?.message_id??null})}::jsonb)`;
     published++;
    }catch(error){
     await sql`UPDATE content_queue SET status='failed',updated_at=now() WHERE id=${item.id}`;
-    await sql`INSERT INTO audit_events(user_id,action,subject_id,detail) VALUES(${item.user_id},'scheduled_telegram_failed',${item.id},${JSON.stringify({reason:error instanceof Error?error.message:'UNKNOWN'})}::jsonb)`;
     failed++;
    }
   }
